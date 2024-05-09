@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+</head>
+
+<body>
+    <h1>Añadir Producto</h1>
+
+    <input type="text" class="producto" placeholder="Insertar Nombre De Producto">
+    <input type="text" class="precio" placeholder="Insertar Precio">
+
+    <button class="enviar">Agregar Productos</button>
+
+    <div class="resultados">
+
+    </div>
+
+    <script>
+        const nombre = $(".producto")
+        const precio = $(".precio")
+        const boton = $(".enviar")
+
+        $.get("imprimir.php",
+            function (respuesta) {
+                $(".resultados").html(respuesta);
+            },
+        );
+
+        boton.click(function () {
+            $.ajax({
+                type: "POST",
+                url: "guardar.php",
+                data: { nombre: nombre.val(), precio: precio.val() },
+                success: function (response) {
+                    $(".resultados").html(response);
+                },
+            });
+            nombre.val("");
+            precio.val("");
+        });
+
+        $(document).on("click", ".borrar", function () {
+            $.post(
+                "borrar.php",
+                { id: $(this).parents("div").attr("id") },
+                function (response) {
+                    $(".resultados").html(response);
+                }
+            );
+        });
+
+    </script>
+</body>
+
+</html>
